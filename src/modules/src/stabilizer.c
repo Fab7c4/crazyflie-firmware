@@ -129,16 +129,20 @@ static void stabilizerTask(void* param)
 
     commanderGetSetpoint(&setpoint, &state);
 
-    sitAwUpdateSetpoint(&setpoint, &sensorData, &state);
+    // Update of setpoint according to current state seems unnecessary
+    //sitAwUpdateSetpoint(&setpoint, &sensorData, &state);
 
-    stateController(&control, &setpoint, &sensorData, &state, tick);
+    // Seems also unnecessary but we could include some ramping or of course an actual controller
+    //stateController(&control, &setpoint, &sensorData, &state, tick);
 
     checkEmergencyStopTimeout();
 
     if (emergencyStop) {
       powerStop();
     } else {
-      powerDistribution(&control);
+      //FIXME I would maybe overload the power distribution directly on the setpoint_t struct
+      //powerDistribution(&control);
+      powerDistributionDirect(&setpoint);
     }
 
     tick++;

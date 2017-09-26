@@ -107,6 +107,31 @@ void powerDistribution(const control_t *control)
   }
 }
 
+
+void powerDistributionDirect(const setpoint_t *setpoint)
+{
+    // expects floats as thrust measure as percentage in the range 0 to 100.0
+    motorPower.m1 = limitThrust((int) (setpoint->motorControl.topLeft/100.0f * 65536));
+    motorPower.m2 = limitThrust((int) (setpoint->motorControl.topRight/100.0f * 65536));
+    motorPower.m3 =  limitThrust((int) (setpoint->motorControl.bottomLeft/100.0f * 65536));
+    motorPower.m4 =  limitThrust((int)(setpoint->motorControl.bottomRight/100.0f * 65536));
+  // TODO unsure what this flag does
+  if (motorSetEnable)
+  {
+    motorsSetRatio(MOTOR_M1, motorPowerSet.m1);
+    motorsSetRatio(MOTOR_M2, motorPowerSet.m2);
+    motorsSetRatio(MOTOR_M3, motorPowerSet.m3);
+    motorsSetRatio(MOTOR_M4, motorPowerSet.m4);
+  }
+  else
+  {
+    motorsSetRatio(MOTOR_M1, motorPower.m1);
+    motorsSetRatio(MOTOR_M2, motorPower.m2);
+    motorsSetRatio(MOTOR_M3, motorPower.m3);
+    motorsSetRatio(MOTOR_M4, motorPower.m4);
+  }
+}
+
 PARAM_GROUP_START(motorPowerSet)
 PARAM_ADD(PARAM_UINT8, enable, &motorSetEnable)
 PARAM_ADD(PARAM_UINT16, m1, &motorPowerSet.m1)
