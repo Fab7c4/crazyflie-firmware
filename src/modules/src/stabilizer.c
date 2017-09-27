@@ -137,13 +137,13 @@ static void stabilizerTask(void* param)
 
     checkEmergencyStopTimeout();
 
-    if (emergencyStop) {
-      powerStop();
-    } else {
+    // if (emergencyStop) {
+    //   powerStop();
+    // } else {
       //FIXME I would maybe overload the power distribution directly on the setpoint_t struct
       //powerDistribution(&control);
       powerDistributionDirect(&setpoint);
-    }
+    // }
 
     tick++;
   }
